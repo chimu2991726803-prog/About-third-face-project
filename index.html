@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#e8d9c8" />
+  <title>BLINK & STITCH · 眨眼缝一张脸</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="page-wrap">
+    <header class="topbar stitched">
+      <div class="brand-area">
+        <span class="brand-mark" aria-hidden="true">✳</span>
+        <div>
+          <div class="eyebrow">AN INTERACTIVE FACE-MAKING EXPERIMENT</div>
+          <h1>BLINK <i>&</i> STITCH<span class="brand-period">.</span></h1>
+          <p>眨一下眼睛，为布娃娃缝上一块奇怪的五官。</p>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <div class="model-brief"><span id="cameraLight" class="lamp"></span><span id="cameraBrief">相机未启动</span></div>
+        <button class="btn btn-cream" id="resetBtn" type="button">↻ 重新开始</button>
+        <button class="btn btn-raspberry" id="cameraBtn" type="button">◉ 启动摄像头</button>
+      </div>
+    </header>
+
+    <main class="studio-layout">
+      <aside class="left-rail">
+        <section class="card stitched rules-card">
+          <p class="mini-heading">THE RULES / 游戏规则</p>
+          <h2>每一次眨眼，<br /><em>决定一小块命运。</em></h2>
+          <p class="muted">五官会从空中不断掉落。等它经过娃娃的脸时，眨眼，把它留在原地。</p>
+          <div class="rules-illustration"><span class="rule-eye">◉</span><span class="rule-arrow">↓</span><span class="rule-stitched">✳</span></div>
+          <p class="tip">不需要放在正确位置。<br /><strong>眼睛可以长在下巴，嘴巴可以长在额头。</strong></p>
+        </section>
+
+        <section class="card stitched rounds-card">
+          <p class="mini-heading">YOUR JOURNEY / 制作轮次</p>
+          <div class="round-item active" data-round="0">
+            <span class="round-num">01</span><span class="round-name">眼睛 · EYES</span><span class="round-count" id="roundCount0">0 / 2</span>
+          </div>
+          <div class="round-item" data-round="1">
+            <span class="round-num">02</span><span class="round-name">鼻子 · NOSE</span><span class="round-count" id="roundCount1">0 / 1</span>
+          </div>
+          <div class="round-item" data-round="2">
+            <span class="round-num">03</span><span class="round-name">嘴巴 · MOUTH</span><span class="round-count" id="roundCount2">0 / 1</span>
+          </div>
+          <div class="round-item" data-round="3">
+            <span class="round-num">04</span><span class="round-name">眉毛 · BROWS</span><span class="round-count" id="roundCount3">0 / 2</span>
+          </div>
+        </section>
+        <div class="handwritten-note">“NO WRONG FACES.”<br /><small>— 每张脸都只有一种可能性</small></div>
+      </aside>
+
+      <section class="stage-column" aria-label="布娃娃拼脸区域">
+        <div class="stage-heading">
+          <div>
+            <span class="round-label" id="roundLabel">ROUND 01 / 眼睛</span>
+            <h2 id="roundTitle">接住 <span>两只眼睛</span></h2>
+          </div>
+          <div class="stage-progress"><b id="progressText">0 / 2</b><span>已捕捉</span></div>
+        </div>
+
+        <div class="stage stitched" id="stage" aria-label="五官会落下来，请眨眼捕捉">
+          <div class="stage-sprinkle sprinkle-one">✦</div>
+          <div class="stage-sprinkle sprinkle-two">✧</div>
+          <div class="stage-sprinkle sprinkle-three">✳</div>
+          <div class="stage-side-note">LET IT FALL<br />LET IT STAY</div>
+          <div class="top-hint">↓ &nbsp;FALLING PIECES&nbsp; ↓</div>
+          <div class="ready-hint" id="readyHint">✳ NOW · BLINK!</div>
+
+          <div class="doll-body" aria-hidden="true">
+            <div class="dress-detail"></div><div class="dress-heart">♥</div>
+            <div class="doll-neck"></div>
+          </div>
+          <div class="head-wrap" id="headWrap">
+            <div class="doll-ear ear-left"></div><div class="doll-ear ear-right"></div>
+            <div class="doll-face" id="faceTarget">
+              <div class="face-weave"></div>
+              <div class="face-center-seam"></div>
+              <div class="cheek-patch cheek-left"></div><div class="cheek-patch cheek-right"></div>
+              <span class="face-stamp">YOUR<br />FACE</span>
+            </div>
+            <div class="wool-hair tuft-one"></div><div class="wool-hair tuft-two"></div><div class="wool-hair tuft-three"></div>
+          </div>
+          <div class="parts-layer" id="partsLayer"></div>
+          <div class="catch-sparkles" id="catchSparkles" aria-hidden="true"></div>
+          <div class="transition-overlay hidden" id="transitionOverlay" aria-live="polite">
+            <div class="transition-card stitched">
+              <span>✦ STITCH COMPLETE ✦</span>
+              <strong id="transitionText">进入下一轮</strong>
+              <small>下一块布料，正要落下。</small>
+            </div>
+          </div>
+          <div class="stage-bottom-tag">✳ HANDMADE WITH A BLINK ✳</div>
+        </div>
+
+        <div class="stage-controls">
+          <p id="gameHint">当眼睛经过布娃娃的脸时，眨一下眼。</p>
+          <button class="btn btn-outline" id="blinkBtn" type="button">◉ 模拟眨眼 <small>(空格)</small></button>
+        </div>
+      </section>
+
+      <aside class="right-rail">
+        <section class="card stitched camera-card">
+          <div class="panel-title"><span>LIVE INPUT</span><span class="live-circle" id="liveLight"></span></div>
+          <div class="webcam-window">
+            <video id="webcam" autoplay muted playsinline></video>
+            <div class="camera-message" id="cameraMessage"><span class="camera-glyph">☼</span><span>打开摄像头后<br />在这里看到自己</span></div>
+            <div class="camera-corner c1"></div><div class="camera-corner c2"></div>
+          </div>
+          <div class="tracker-status"><span id="statusDot" class="status-dot"></span><span id="trackerStatus">等待用户开启摄像头</span></div>
+          <div class="info-strip"><span>MediaPipe Face Landmarker</span><strong id="modelFlag">OFF</strong></div>
+        </section>
+
+        <section class="card stitched expression-card">
+          <p class="mini-heading">EYE TRACKER / 眨眼检测</p>
+          <div class="expression-icons"><span class="lid-open" id="eyeDisplayLeft">◉</span><span class="eyeblink-word" id="eyeText">EYES OPEN</span><span class="lid-open" id="eyeDisplayRight">◉</span></div>
+          <div class="bar-label"><span>闭眼程度</span><strong id="blinkValue">0%</strong></div>
+          <div class="level-bar"><div id="blinkFill"></div><i class="level-threshold"></i></div>
+          <p class="subtle">眨眼触发需要先闭眼、再睁眼；每次只捕捉一枚五官。</p>
+          <div class="detect-feedback" id="detectFeedback">等待检测 ...</div>
+        </section>
+
+        <section class="card stitched help-card">
+          <p class="mini-heading">HOW TO PLAY</p>
+          <div class="help-step"><span>①</span><p>点击右上角「启动摄像头」，允许 Chrome 访问相机。</p></div>
+          <div class="help-step"><span>②</span><p>看着娃娃脸，等喜欢的五官飘落到脸部区域。</p></div>
+          <div class="help-step"><span>③</span><p>眨眼固定五官。没有相机时，可点击「模拟眨眼」测试。</p></div>
+          <div class="help-step"><span>④</span><p>所有轮次结束后，用真实表情驱动拼好的五官。</p></div>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="footer-line"><span>BLINK & STITCH © CONCEPT PROTOTYPE</span><span>HTML · CSS · JAVASCRIPT · MEDIAPIPE</span></footer>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="./script.js" defer></script>
+</body>
+</html>
