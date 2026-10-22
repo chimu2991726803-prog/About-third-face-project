@@ -10,3 +10,262 @@
 
 /* A gentle cue when one falling part is inside the doll face. */
 .ready-hint{position:absolute;top:18%;left:50%;transform:translateX(-50%) translateY(7px);z-index:12;opacity:0;pointer-events:none;background:#b55c70;color:#fff9ef;font-size:11px;font-weight:900;letter-spacing:.12em;border-radius:999px;padding:7px 13px;box-shadow:0 4px 10px #8b52663b;transition:opacity .2s,transform .2s;white-space:nowrap}.ready-hint.visible{opacity:1;transform:translateX(-50%) translateY(0)}.doll-face.can-catch{border-color:#bc6a7c;box-shadow:inset 13px 4px 20px #fff9e549,inset -14px -9px 20px #915e3930,0 0 0 4px #c16a7b38,0 9px 22px #68492c1c}
+
+/* --------------------------------------------------------------------------
+   HANDMADE FEATURE KIT
+   The moving .feature owns game positioning. Every decorative transform lives
+   on a child, so falling, collision detection and saved face coordinates stay
+   independent from the felt styling and expression animation.
+   -------------------------------------------------------------------------- */
+.stage {
+  background-color:#e7dac9;
+  background-image:
+    radial-gradient(circle at 12% 18%,rgba(191,112,126,.13) 0 3px,transparent 3.5px),
+    radial-gradient(circle at 87% 74%,rgba(107,139,128,.12) 0 4px,transparent 4.5px),
+    repeating-linear-gradient(2deg,rgba(255,255,255,.12) 0 1px,transparent 1px 5px),
+    repeating-linear-gradient(92deg,rgba(93,61,43,.025) 0 1px,transparent 1px 6px),
+    radial-gradient(ellipse at 52% 43%,#f7f0e5 0,#e8ddcd 66%,#ddcdbb 100%);
+}
+.doll-face {
+  background-image:
+    repeating-linear-gradient(4deg,rgba(255,255,255,.10) 0 1px,transparent 1px 4px),
+    repeating-linear-gradient(94deg,rgba(101,61,37,.04) 0 1px,transparent 1px 5px),
+    radial-gradient(ellipse at 34% 25%,#f4dab8,#d4a77f 94%);
+  box-shadow:inset 13px 7px 20px #fff9e552,inset -16px -11px 23px #8e5d3938,0 12px 24px #68492c24;
+}
+.feature {
+  overflow:visible;
+  isolation:isolate;
+  filter:drop-shadow(0 5px 3px rgba(78,49,34,.22)) drop-shadow(0 1px 0 rgba(255,255,255,.62));
+}
+.feature-art {
+  position:relative;
+  display:flex;
+  width:100%;
+  height:100%;
+  align-items:center;
+  justify-content:center;
+  transform-origin:50% 50%;
+  animation:felt-float var(--float-duration,2.8s) ease-in-out var(--float-delay,0s) infinite;
+}
+.feature.captured {
+  filter:drop-shadow(0 3px 2px rgba(65,41,35,.23)) drop-shadow(0 1px 0 rgba(255,255,255,.55));
+}
+.feature.captured .feature-art {animation:stitch-settle .62s cubic-bezier(.2,.9,.25,1.25) both}
+.feature.captured::before,
+.feature.captured::after {
+  content:'';
+  position:absolute;
+  inset:-7px;
+  z-index:5;
+  pointer-events:none;
+  border-radius:48%;
+}
+.feature.captured::after {
+  border:2px dashed #f7e9d6;
+  box-shadow:0 0 0 1px rgba(139,91,76,.48);
+  animation:sew-ring .68s ease-out both;
+}
+.feature.captured::before {
+  inset:auto -2px -3px auto;
+  width:18px;
+  height:13px;
+  border-bottom:2px solid #945e57;
+  border-radius:50%;
+  transform:rotate(-25deg);
+  animation:thread-tail .72s ease-out both;
+}
+.feature.captured.stitched-in::after {opacity:0}
+
+/* Eyes: layered wool-white felt, coloured felt iris, embroidery and lashes. */
+.eye-feature {width:76px;height:56px}
+.eye-shape {
+  position:relative;
+  width:70px;
+  height:47px;
+  overflow:hidden;
+  border:3px solid #79584f;
+  border-radius:57% 43% 55% 45% / 58% 57% 43% 42%;
+  background:
+    repeating-linear-gradient(7deg,rgba(125,93,75,.06) 0 1px,transparent 1px 3px),
+    radial-gradient(ellipse at 35% 27%,#fffdf4 0,#f4e6d9 70%,#ddc9bb 100%);
+  box-shadow:inset 2px 3px 2px rgba(255,255,255,.8),inset -3px -4px 5px rgba(118,78,61,.17),0 3px 0 #b98978;
+  transform:scaleY(var(--eye-scale,1));
+  transform-origin:50% 54%;
+  transition:transform .075s linear;
+}
+.eye-shape::before {
+  content:'';
+  position:absolute;
+  inset:3px;
+  border:1.5px dashed rgba(151,101,84,.56);
+  border-radius:inherit;
+  z-index:3;
+  pointer-events:none;
+}
+.eye-shape::after {
+  content:'';
+  position:absolute;
+  left:3px;
+  right:3px;
+  top:-8px;
+  height:15px;
+  border-bottom:2px dashed rgba(83,58,53,.72);
+  border-radius:50%;
+  background:var(--lid-color,#b4877f);
+  box-shadow:inset 0 -2px 3px rgba(90,55,50,.16);
+  z-index:4;
+}
+.iris {
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:35px;
+  height:35px;
+  transform:translate(-50%,-50%);
+  border:3px solid #5f5149;
+  border-radius:50%;
+  background:
+    repeating-conic-gradient(rgba(255,255,255,.17) 0 5deg,transparent 5deg 17deg),
+    radial-gradient(circle at 35% 28%,color-mix(in srgb,var(--iris) 65%,white),var(--iris) 52%,color-mix(in srgb,var(--iris) 70%,#342d2a));
+  box-shadow:inset 2px 3px 4px rgba(255,255,255,.28),0 1px 2px rgba(59,45,40,.35);
+}
+.pupil {
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:15px;
+  height:15px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:#332f2d;
+  box-shadow:0 0 0 1px rgba(44,35,32,.28);
+}
+.pupil::after {content:'';position:absolute;left:1px;top:0;width:6px;height:6px;border-radius:50%;background:#fffdf5;box-shadow:8px 8px 0 -2px rgba(255,255,255,.72)}
+.lash {
+  position:absolute;
+  top:6px;
+  width:15px;
+  height:17px;
+  z-index:6;
+  border-top:2px solid #3f3734;
+}
+.lash::before,.lash::after {content:'';position:absolute;top:-5px;width:2px;height:10px;border-radius:2px;background:#3f3734;box-shadow:4px -1px 0 #3f3734}
+.lash-left {left:7px;transform:rotate(-27deg)}
+.lash-left::before {left:1px;transform:rotate(-31deg)}
+.lash-left::after {left:8px;transform:rotate(-10deg)}
+.lash-right {right:7px;transform:scaleX(-1) rotate(-27deg)}
+.lash-right::before {left:1px;transform:rotate(-31deg)}
+.lash-right::after {left:8px;transform:rotate(-10deg)}
+.eye-feature[data-style="star"] .pupil {width:18px;height:18px;border-radius:0;clip-path:polygon(50% 0,61% 34%,98% 35%,68% 56%,79% 94%,50% 72%,21% 94%,32% 56%,2% 35%,39% 34%);background:#fff3bd;box-shadow:none}
+.eye-feature[data-style="star"] .pupil::after {display:none}
+.eye-feature[data-style="button"] .eye-shape {width:49px;height:49px;border:4px solid #af8f80;border-radius:50%;background:repeating-radial-gradient(circle at 35% 25%,rgba(255,255,255,.10) 0 1px,transparent 1px 3px),#746368;box-shadow:inset 5px 6px 7px #4f4548,0 3px 0 #997568}
+.eye-feature[data-style="button"] .eye-shape::before {inset:4px;border-color:#cfb5a5}
+.eye-feature[data-style="button"] .eye-shape::after,.eye-feature[data-style="button"] .lash {display:none}
+.eye-feature[data-style="button"] .iris {width:29px;height:29px;border:0;background:transparent;box-shadow:none}
+.eye-feature[data-style="button"] .pupil {width:29px;height:29px;border-radius:50%;background:radial-gradient(circle at 27% 27%,#eadfd2 0 3.5px,transparent 4px),radial-gradient(circle at 73% 27%,#eadfd2 0 3.5px,transparent 4px),radial-gradient(circle at 27% 73%,#eadfd2 0 3.5px,transparent 4px),radial-gradient(circle at 73% 73%,#eadfd2 0 3.5px,transparent 4px)}
+.eye-feature[data-style="button"] .pupil::after {display:none}
+.eye-feature[data-style="embroidered"] .eye-shape {height:36px;background:linear-gradient(145deg,#e8babb,#c88d98);border-color:#9a6470}
+.eye-feature[data-style="embroidered"] .iris {width:43px;height:18px;top:43%;border:0;border-bottom:5px solid #5b4443;border-radius:0 0 55% 55%;background:none;box-shadow:0 2px 0 rgba(255,239,224,.26)}
+.eye-feature[data-style="embroidered"] .pupil {display:none}
+.eye-feature[data-style="embroidered"] .eye-shape::after {background:#d69fa7}
+
+/* Noses: stuffed felt patches with a separate inner seam. */
+.nose-feature {width:64px;height:66px}
+.nose-shape {
+  position:relative;
+  display:block;
+  width:48px;
+  height:49px;
+  overflow:hidden;
+  border:3px solid color-mix(in srgb,var(--nose-color) 68%,#58463e);
+  border-radius:46% 51% 58% 55% / 64% 63% 37% 36%;
+  background:
+    repeating-linear-gradient(110deg,rgba(255,255,255,.07) 0 1px,transparent 1px 4px),
+    radial-gradient(circle at 32% 25%,color-mix(in srgb,var(--nose-color) 60%,white),var(--nose-color) 55%,color-mix(in srgb,var(--nose-color) 78%,#5e4039));
+  box-shadow:inset 5px 5px 5px rgba(255,255,255,.28),inset -4px -5px 6px rgba(89,53,44,.2),0 4px 0 rgba(116,75,63,.27);
+  transform:scaleX(var(--nose-scale,1)) rotate(var(--nose-tilt,0deg));
+  transition:transform .09s linear;
+}
+.nose-stitches {position:absolute;inset:4px;border:2px dashed rgba(255,236,215,.72);border-radius:inherit;filter:drop-shadow(0 1px 0 rgba(92,56,47,.34))}
+.nose-feature[data-style="triangle"] .nose-shape {width:53px;height:49px;border:0;clip-path:polygon(50% 4%,97% 92%,93% 98%,8% 98%,3% 92%);border-radius:0;background:linear-gradient(125deg,#edb8b5,#c47d83 68%,#9f646d)}
+.nose-feature[data-style="triangle"] .nose-stitches {inset:7px 8px 5px;clip-path:polygon(50% 0,100% 100%,0 100%);border-radius:0}
+.nose-feature[data-style="button"] .nose-shape {width:45px;height:45px;border-radius:50%;background:radial-gradient(circle at 32% 28%,#cf9b78,#9a684f 72%);border:4px solid #835d4b}
+.nose-feature[data-style="button"] .nose-stitches {inset:9px;border:0;background:radial-gradient(circle at 28% 28%,#5e493f 0 3px,transparent 3.5px),radial-gradient(circle at 72% 28%,#5e493f 0 3px,transparent 3.5px),radial-gradient(circle at 28% 72%,#5e493f 0 3px,transparent 3.5px),radial-gradient(circle at 72% 72%,#5e493f 0 3px,transparent 3.5px)}
+.nose-feature[data-style="heart"] .nose-shape {width:48px;height:44px;border:0;border-radius:46% 46% 48% 48%;clip-path:polygon(50% 96%,8% 52%,3% 31%,10% 13%,25% 5%,39% 10%,50% 23%,61% 10%,75% 5%,90% 13%,97% 31%,92% 52%);background:linear-gradient(135deg,#edaaa9,var(--nose-color) 64%,#a95d68)}
+.nose-feature[data-style="heart"] .nose-stitches {inset:5px 6px 7px;clip-path:inherit;border-radius:35%}
+
+/* Mouths: felt appliques keep their inner volume when jawOpen stretches them. */
+.mouth-feature {width:98px;height:61px}
+.mouth-shape {
+  position:relative;
+  display:block;
+  width:82px;
+  height:37px;
+  overflow:hidden;
+  border:4px solid #934f5e;
+  border-top-width:2px;
+  border-radius:26% 26% 62% 62% / 25% 25% 80% 80%;
+  background:radial-gradient(ellipse at 50% 12%,#7a404b 0 32%,#b95f73 34% 68%,#d88891 69%);
+  box-shadow:inset 0 -4px 5px rgba(105,44,57,.27),0 3px 0 rgba(122,73,70,.25);
+  transform:scaleX(var(--mouth-width,1)) scaleY(var(--mouth-stretch,1));
+  transform-origin:50% 16%;
+  transition:transform .085s linear;
+}
+.mouth-shape::after {content:'';position:absolute;inset:3px;border:1.5px dashed rgba(255,218,202,.7);border-radius:inherit;z-index:4}
+.mouth-detail {position:absolute;left:18%;right:18%;bottom:2px;height:10px;border-radius:50% 50% 10px 10px;background:#e9a1a0;box-shadow:inset 0 2px 2px rgba(117,52,63,.3)}
+.mouth-feature[data-style="stitched"] .mouth-shape {height:31px;border:0;background:none;box-shadow:none;overflow:visible}
+.mouth-feature[data-style="stitched"] .mouth-shape::before {content:'';position:absolute;left:7px;right:7px;top:2px;height:23px;border-bottom:6px solid #8d4b5a;border-radius:0 0 52% 52%;background:repeating-linear-gradient(118deg,transparent 0 7px,#e5b9aa 7px 9px,transparent 9px 15px)}
+.mouth-feature[data-style="stitched"] .mouth-shape::after {inset:8px 12px 0;border:0;border-bottom:2px dashed #f4d2bd;border-radius:50%}
+.mouth-feature[data-style="stitched"] .mouth-detail {display:none}
+.mouth-feature[data-style="open"] .mouth-shape {width:46px;height:39px;border-radius:50%;background:radial-gradient(ellipse at 50% 60%,#d5848e 0 20%,#6d3d47 22% 100%)}
+.mouth-feature[data-style="teeth"] .mouth-shape {height:36px;border-radius:20% 20% 65% 65%;background:#7c424e}
+.mouth-feature[data-style="teeth"] .mouth-detail {left:8px;right:8px;top:4px;bottom:auto;height:14px;border-radius:7px 7px 4px 4px;background:repeating-linear-gradient(90deg,#fff9e9 0 13px,#d8c7b6 13px 14px);box-shadow:inset 0 -2px 2px #c9ac9b}
+.mouth-feature[data-style="heart"] .mouth-shape {width:58px;height:43px;border:0;border-radius:38%;clip-path:polygon(50% 97%,7% 53%,3% 32%,9% 14%,24% 5%,39% 9%,50% 23%,61% 9%,76% 5%,91% 14%,97% 32%,93% 53%);background:linear-gradient(140deg,#ed9ba7,#bd5d72 66%,#964557)}
+.mouth-feature[data-style="heart"] .mouth-shape::after {inset:5px 7px 7px;clip-path:inherit;border-radius:30%}
+.mouth-feature[data-style="heart"] .mouth-detail {left:31%;right:31%;bottom:10px;height:5px;background:#7e3f4c}
+
+/* Brows: thick yarn with visible twisted fibres. */
+.brow-feature {width:99px;height:47px}
+.brow-shape {
+  position:relative;
+  width:87px;
+  height:29px;
+  overflow:hidden;
+  border-top:12px solid var(--brow-color,#866051);
+  border-radius:56% 80% 0 0;
+  background:none;
+  filter:drop-shadow(0 3px 1px rgba(75,48,40,.24));
+  transform:translateY(var(--brow-shift,0px)) rotate(-5deg);
+  transition:transform .1s linear;
+}
+.brow-shape::after {content:'';position:absolute;left:5px;right:3px;top:-10px;height:8px;border-top:2px dashed color-mix(in srgb,var(--brow-color) 50%,white);border-radius:50%}
+.brow-fiber {position:absolute;left:11px;right:9px;top:-9px;height:8px;background:repeating-linear-gradient(108deg,transparent 0 7px,rgba(255,244,226,.38) 7px 9px,transparent 9px 14px);transform:rotate(-3deg)}
+.brow-feature[data-style="straight"] .brow-shape {width:87px;border-radius:14px;transform:translateY(var(--brow-shift,0px)) rotate(7deg)}
+.brow-feature[data-style="crooked"] .brow-shape {width:80px;border-radius:0 95% 0 0;border-top-width:9px;transform:translateY(var(--brow-shift,0px)) rotate(-12deg)}
+
+@keyframes felt-float {
+  0%,100% {transform:translateY(-1px) rotate(-1.4deg)}
+  50% {transform:translateY(2px) rotate(1.6deg)}
+}
+@keyframes stitch-settle {
+  0% {transform:scale(1) rotate(0)}
+  42% {transform:scale(.88) rotate(-4deg)}
+  72% {transform:scale(1.07) rotate(2deg)}
+  100% {transform:scale(1) rotate(0)}
+}
+@keyframes sew-ring {
+  0% {opacity:0;transform:scale(1.28) rotate(-18deg)}
+  30% {opacity:1}
+  100% {opacity:0;transform:scale(.92) rotate(8deg)}
+}
+@keyframes thread-tail {
+  0% {opacity:0;transform:translate(15px,-10px) rotate(-55deg) scale(.3)}
+  45% {opacity:1}
+  100% {opacity:0;transform:translate(0,0) rotate(-25deg) scale(1)}
+}
+@media (prefers-reduced-motion:reduce) {
+  .feature-art {animation:none}
+  .feature.captured .feature-art {animation:stitch-settle .01s both}
+  .feature.captured::after,.feature.captured::before {animation-duration:.01s}
+}

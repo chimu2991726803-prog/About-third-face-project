@@ -23,22 +23,23 @@ const FEATURE_SIZES = {eye:[76,56],nose:[64,66],mouth:[98,61],brow:[99,47]};
 const STYLES = {
   eye: [
     {name:'蜜糖眼睛',style:'classic',iris:'#aa744f'},
-    {name:'蓝色眼睛',style:'classic',iris:'#8299a0'},
-    {name:'绿色眼睛',style:'classic',iris:'#79876b'},
+    {name:'湖蓝毛毡眼睛',style:'classic',iris:'#7399a8'},
+    {name:'苔绿色星星眼睛',style:'star',iris:'#7f9673'},
     {name:'纽扣眼睛',style:'button',iris:'#61535a'},
-    {name:'困倦眼睛',style:'sleepy',iris:'#986c7b'},
+    {name:'月桂刺绣眼睛',style:'embroidered',iris:'#986c7b'},
   ],
   nose: [
     {name:'布艺圆鼻',style:'round',color:'#bf8479'},
     {name:'三角粉鼻',style:'triangle',color:'#c9898a'},
     {name:'褐色纽扣鼻',style:'button',color:'#af7d60'},
-    {name:'桃粉圆鼻',style:'round',color:'#cb9d99'},
+    {name:'珊瑚爱心鼻',style:'heart',color:'#c97f83'},
   ],
   mouth: [
     {name:'微笑嘴巴',style:'smile'},
     {name:'绣线嘴巴',style:'stitched'},
-    {name:'圆圆嘴巴',style:'oval'},
-    {name:'玫瑰嘴唇',style:'lips'},
+    {name:'惊讶张嘴',style:'open'},
+    {name:'露齿笑嘴巴',style:'teeth'},
+    {name:'莓果爱心嘴',style:'heart'},
   ],
   brow: [
     {name:'拱形眉毛',style:'arched',color:'#745548'},
@@ -115,17 +116,19 @@ function createPart(type) {
   dom.style.setProperty('--brow-shift','0px');
   dom.style.setProperty('--nose-scale',1);
   dom.style.setProperty('--nose-tilt','0deg');
+  dom.style.setProperty('--float-delay',`${rand(-2.5,0).toFixed(2)}s`);
+  dom.style.setProperty('--float-duration',`${rand(2.2,3.4).toFixed(2)}s`);
   if(type==='eye') {
     dom.style.setProperty('--iris',variant.iris);
-    dom.innerHTML='<span class="eye-shape"><span class="iris"><span class="pupil"></span></span></span>';
+    dom.innerHTML='<span class="feature-art"><span class="lash lash-left"></span><span class="eye-shape"><span class="iris"><span class="pupil"></span></span></span><span class="lash lash-right"></span></span>';
   } else if(type==='nose') {
     dom.style.setProperty('--nose-color',variant.color);
-    dom.innerHTML='<span class="nose-shape"></span>';
+    dom.innerHTML='<span class="feature-art"><span class="nose-shape"><span class="nose-stitches"></span></span></span>';
   } else if(type==='mouth') {
-    dom.innerHTML='<span class="mouth-shape"></span>';
+    dom.innerHTML='<span class="feature-art"><span class="mouth-shape"><span class="mouth-detail"></span></span></span>';
   } else if(type==='brow') {
     dom.style.setProperty('--brow-color',variant.color);
-    dom.innerHTML='<span class="brow-shape"></span>';
+    dom.innerHTML='<span class="feature-art"><span class="brow-shape"><span class="brow-fiber"></span></span></span>';
   }
   partsLayer.appendChild(dom);
   const sr=stageRect(); const fr=faceRect();
@@ -179,6 +182,7 @@ function freezePart(part) {
   part.attached=true;
   falling=falling.filter(p=>p!==part);
   part.el.classList.add('captured');
+  setTimeout(()=>part.el.classList.add('stitched-in'),720);
   part.el.style.willChange='auto';
   const sr=stageRect(),fr=faceRect();
   // Save the relative position within the actual face, so resizing doesn't rearrange features.
